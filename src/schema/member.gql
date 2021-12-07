@@ -1,0 +1,38 @@
+type Member{
+    id: String!
+    projectId: String!
+    userId: String!
+    role: String!
+}
+
+enum MemberOrder{
+ role_DESC
+ role_ASC
+}
+
+type MemberReponsive{
+    success:Boolean
+    message:String
+    member:Member
+}
+
+type Query{
+    findAllMember(first: Int, skip: Int, orderBy: MemberOrder):[Member]
+    findOneMember(id:String):Member
+}
+
+type Mutation{
+    createdMember(
+        projectId:String,
+        userId:String,
+        role:String
+    ):MemberReponsive
+    updatedMenber(
+        id:String!,
+        projectId:String,
+        userId:String,
+    ):MemberReponsive
+    deleteMember(
+        id:String!
+    ):MemberReponsive
+}

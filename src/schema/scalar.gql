@@ -1,0 +1,53 @@
+scalar Date
+scalar JSON
+scalar JSONObject
+
+type ObjectMeta {
+  count: Int
+}
+
+type CommonResponse {
+  success: Boolean!
+  message: String
+  errors: [Error!]
+}
+
+type Error {
+  field: String
+  path: String
+  message: String
+}
+
+type DeletedId {
+  id: String
+}
+
+type DeletedIds {
+  ids: [String!]
+}
+
+
+enum _ModelMutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+input PositionObject {
+  id: String!
+  position: Int!
+}
+
+input SubscriptionFilter {
+  mutation_in: [_ModelMutationType!]
+}
+
+type S3Payload {
+  signedRequestURL: String!,
+  signedDownloadURL: String!,
+  url: String!
+}
+
+type Mutation {
+  signS3(filename: String!, filetype: String!): S3Payload!
+}

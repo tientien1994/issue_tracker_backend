@@ -1,0 +1,26 @@
+<div class="footer">
+  <table width="100%">
+    <tr>
+      <td class="content-block">
+        <b><a href="<%= process.env.FRONTEND_URL %>"><%= process.env.APP_NAME %></a></b>
+        <br />
+        If you have questions or concerns, please call us or email us at <br />
+        Email: <%= process.env.EMAIL_SUPPORT %><br />
+        <br />
+        <b><%= process.env.APP_NAME %> provides 24 hour support</b>
+        <br />
+        If you have received this communication in error, please do not forward its contents; notify the
+        sender and delete it and any attachments. This message may contain information that is confidential
+        and legally privileged. Unless you are the addressee, you may not use, copy or disclose to anyone
+        this message or any information contained within.
+      </td>
+    </tr>
+    <tr>
+      <td class="aligncenter content-block">
+        <hr><br>
+        Sent with <span class="love">♥︎</span> from <a href="<%= process.env.FRONTEND_URL %>"><%= process.env.APP_NAME %></a>
+        &copy; 2020 <%= process.env.APP_NAME %>
+      </td>
+    </tr>
+  </table>
+</div>

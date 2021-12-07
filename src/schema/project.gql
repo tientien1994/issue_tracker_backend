@@ -1,0 +1,51 @@
+# type Report {
+#   id: String!
+#   description: String
+#   downloadUrl: String
+#   status: ReportStatus
+#   generatedAt: Date
+#   createdAt: Date
+#   reportType: ReportType
+#   reportReferences: [ReportReference]
+# }
+type Project {
+  id: String!
+  description: String
+  name: String
+  createdAt: Date
+  updateAt:Date
+  userId: String!
+}
+enum ProjectOrder {
+  name_DESC
+  name_ASC
+  createdAt_DESC
+  updateAt_ASC
+}
+type ProjectReponsive{
+  success: Boolean
+  message: String
+  project: Project
+
+}
+type Query {  
+  findAllProject(first: Int, skip: Int, orderBy: ProjectOrder): [Project]
+  findOneProject(id: String): Project
+}
+
+type Mutation {
+  createProject(
+    name: String,
+    description: String,
+    createdAt: Date,
+    updateAt: Date,
+    userId: String
+  ): ProjectReponsive
+  updateProject(
+    id: String!,
+    name: String,
+    description: String,
+  ): ProjectReponsive
+  deleteProject(id: String!):ProjectReponsive
+}
+

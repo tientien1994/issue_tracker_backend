@@ -1,0 +1,89 @@
+type Activity {
+  id: String!
+  actionDescription: String
+	action: String
+	objectId: String
+	objectType: String
+	creatorId: String
+	references: [ActivityReference]
+  creator: User
+  createdAt: Date
+}
+
+enum ActivityOrder {
+  action_DESC
+  action_ASC
+  createdAt_DESC
+  createdAt_ASC
+}
+
+input ActivityFilter {
+  OR: [ActivityFilter!]
+  AND: [ActivityFilter!]
+  action_regex: String
+  objectType: String
+}
+
+type ActivityReference {
+  objectId: String
+	objectType: String
+}
+
+type CreateActivityResponse {
+  success: Boolean!
+  message: String
+  activity: Activity
+}
+
+type UpdateActivityResponse {
+  success: Boolean!
+  message: String
+  activity: Activity
+}
+
+type DeleteActivityResponse {
+  success: Boolean!
+  message: String
+}
+
+input ActivityReferenceInput {
+  objectId: String
+	objectType: String
+}
+
+type Query {
+  allActivities(filter: ActivityFilter, first: Int, skip: Int, orderBy: ActivityOrder): [Activity]
+  _allActivitiesMeta(filter: ActivityFilter): ObjectMeta
+  getActivity(id: String): Activity
+}
+
+type Mutation {
+  createActivity(
+    actionDescription: String
+    action: String
+    objectId: String
+    objectType: String
+    creatorId: String
+    references: [ActivityReferenceInput]
+  ): CreateActivityResponse
+  updateActivity(
+    id: String!
+    actionDescription: String
+    action: String
+    objectId: String
+    objectType: String
+    creatorId: String
+    references: [ActivityReferenceInput]
+  ): UpdateActivityResponse
+  deleteActivity(id: String!): DeleteActivityResponse
+}
+
+type ActivitySubscriptionPayload {
+  mutation: _ModelMutationType!
+  node: Activity
+  previousValues: Activity
+}
+
+type Subscription {
+  Activity(filter: SubscriptionFilter, dataFilter: ActivityFilter): ActivitySubscriptionPayload
+}

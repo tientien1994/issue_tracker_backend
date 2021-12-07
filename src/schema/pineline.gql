@@ -1,0 +1,46 @@
+# type Report {
+#   id: String!
+#   description: String
+#   downloadUrl: String
+#   status: ReportStatus
+#   generatedAt: Date
+#   createdAt: Date
+#   reportType: ReportType
+#   reportReferences: [ReportReference]
+# }
+type Pipeline {
+  id: String!
+  colorCode: String
+  name: String
+  updatedAt: Date
+  createdAt: Date
+  deletedAt:Date
+}
+enum PipelineOrder {
+  name_DESC
+  name_ASC
+}
+type PipelineReponsive{
+  success: Boolean
+  message: String
+  pipeline: Pipeline
+
+}
+type Query {  
+  findAllPipeline(first: Int, skip: Int, orderBy: PipelineOrder): [Pipeline]
+  findOnePipeline(id: String): Pipeline
+}
+
+type Mutation {
+  createPipeline(
+    name: String,
+    colorCode: String,
+  ): PipelineReponsive
+  updatePipeline(
+    id: String!,
+    name: String,
+    colorCode: String,
+  ): PipelineReponsive
+  deletePipeline(id: String!):PipelineReponsive
+}
+
