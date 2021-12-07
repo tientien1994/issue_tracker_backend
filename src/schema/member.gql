@@ -2,7 +2,11 @@ type Member{
     id: String!
     projectId: String!
     userId: String!
-    role: String!
+    role: String
+    createdAt: Date
+    deletedAt: Date
+    updatedAt: Date
+
 }
 
 enum MemberOrder{
@@ -17,7 +21,7 @@ type MemberReponsive{
 }
 
 type Query{
-    findAllMember(first: Int, skip: Int, orderBy: MemberOrder):[Member]
+    findAllMembers(first: Int, skip: Int, orderBy: MemberOrder):[Member]
     findOneMember(id:String):Member
 }
 
@@ -27,7 +31,7 @@ type Mutation{
         userId:String,
         role:String
     ):MemberReponsive
-    updatedMenber(
+    updatedMember(
         id:String!,
         projectId:String,
         userId:String,

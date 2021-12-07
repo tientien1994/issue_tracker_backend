@@ -24,7 +24,7 @@ export default {
     },
     findOneProject: async (_, args, { mongo }) => {
       console.log(args)
-      const project = args.id ? await mongo.Project.findOne({ _id: ObjectId(args.id) }) : null;
+      const project = args.id ? await mongo.Project.findOne({ _id: ObjectId(args.id),deletedAt: null  }) : null;
 
       return project
     },
@@ -35,7 +35,7 @@ export default {
       const { mongo } = context
 
       const { createProjectId } = await mongo.Project.insertOne(args)
-      const createdProject = await mongo.Project.findOne({ _id: createProjectId })
+      const createdProject = await mongo.Project.findOne({ _id: createProjectId ,deletedAt: null })
 
       return {
         success: true,

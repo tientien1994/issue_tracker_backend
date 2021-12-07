@@ -20,12 +20,12 @@ export default {
         id: async (parent) => parent.id || parent._id
     },
     Query:{
-        findAllMember: async (_, args, {mongo}) =>{
+        findAllMembers: async (_, args, {mongo}) =>{
             const { first, skip, orderBy}=args
 
             const limit = first || 10
             const offset = skip || 0
-            const obj = mongo.Member.find()
+            const obj = mongo.Member.find({deletedAt: null})
 
             if (first !== undefined) obj.limit(limit)
             if (skip !== undefined) obj.skip(offset)
@@ -58,8 +58,58 @@ export default {
                 member:state,
                 message:""
                 }           
-            }
+            } ,
+        updatedMember: async (_, args, context) => {
+                const { mongo} = context
+                args.userId=ObjectId(args.userId)
+                args.projectId=ObjectId(args.projectId)
+                const updateMember = await mongo.Member.findOne({ _id: ObjectId(args.id)})
+    
+                console.log(updateMember)
+                if(!!updateMember){
+                    await mongoUpdate('Member', args, context)
+                    const memberReponsive=await mongo.Member.findOne({ _id: ObjectId(args.id), deletedAt: null })
+                    
+                    return {
+                      success: true,
+                      message: "Member has been updated successfully!",
+                      member:memberReponsive
+                    }
+                }
+                return {
+                  success: false,
+                  message: "Member is not found.",
+                  member:null
+                }
+              },
+        deleteMember:async (_, args,context)=>{
+            const { mongo } = context
+            const deletePipeline = await mongo.Pipeline.findOne({ _id: ObjectId(args.id)})
+            if(!!deletePipeline){
+                if(deletePipeline.deletedAt===null){
+                    await mongoDelete('Pipeline', args, context)
+                return {
+                    success: true,
+                    message: "Pipeline has been deleted successfully!"     
+                }
+                }  
+            else{
+                return {
+                    success: true,
+                    message: "Has been deleted before!"     
+                  }
+            }              
             
         }
+        else{
+            return {
+            success: false,
+            message: "User is not authorized."
+            }
+        }
+     
+        }
+        },
+        
 
 }

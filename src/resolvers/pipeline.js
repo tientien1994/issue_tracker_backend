@@ -25,7 +25,7 @@ export default {
 
       const limit = first || 10
       const offset = skip || 0
-      const obj = mongo.Pipeline.find()
+      const obj = mongo.Pipeline.find({deletedAt: null})
 
       if (first !== undefined) obj.limit(limit)
       if (skip !== undefined) obj.skip(offset)
@@ -36,8 +36,8 @@ export default {
       return await obj.toArray()
     },
     findOnePipeline: async (_, args, { mongo }) => {
-      console.log(args)
-      const pipeline = args.id ? await mongo.Pipeline.findOne({ _id: ObjectId(args.id) }) : null;
+      
+      const pipeline = args.id ? await mongo.Pipeline.findOne({ _id: ObjectId(args.id), deletedAt: null}) : null;
       return pipeline
     },
   },
