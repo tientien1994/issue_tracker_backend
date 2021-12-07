@@ -25,7 +25,7 @@ export default {
 
             const limit = first || 10
             const offset = skip || 0
-            const obj = mongo.Member.find()
+            const obj = mongo.Member.find({deletedAt: null})
 
             if (first !== undefined) obj.limit(limit)
             if (skip !== undefined) obj.skip(offset)
@@ -58,8 +58,58 @@ export default {
                 member:state,
                 message:""
                 }           
-            }
-            
-        }
+            },
+        updatedMember: async (_, args, context) => {
+                const { mongo , user} = context
+                
+                const updateMember = await mongo.Member.findOne({ _id: ObjectId(args.id),deletedAt: null})
+                
+                if(!!updateMember){
+                    await mongoUpdate('Member', args, context)
+                    
+                    const MemberReponsive=await mongo.Member.findOne({ _id: ObjectId(args.id), deletedAt: null })
+                    console.log(MemberReponsive)
+                    return {
+                      success: true,
+                      message: "Member has been updated successfully!",
+                      member:MemberReponsive
+                    }
+                }
+                return {
+                  success: false,
+                  message: "Member is not found."
+                }
+              },
+        deleteMember:async (_, args, context)=> {
+                const { mongo } = context
+                const deleteMember = await mongo.Member.findOne({ _id: ObjectId(args.id), deletedAt: null})
+                  console.log(deleteMember)
+                if(!!deleteMember){
+                      if(deleteMember.deletedAt===null){
+                          await mongoDelete('Member', args, context)
+                      return {
+                          success: true,
+                          message: "Member has been deleted successfully!", 
+                          member:deleteMember  
+                        }
+                      }  
+                      else{
+                          return {
+                              success: true,
+                              message: "Has been deleted before!"     
+                            }
+                      }              
+                      
+                  }
+                  else{
+                      return {
+                      success: false,
+                      message: "member not found"
+                      }
+                  }
+               
+              }
+        },
+       
 
 }

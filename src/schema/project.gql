@@ -37,8 +37,6 @@ type Mutation {
   createProject(
     name: String,
     description: String,
-    createdAt: Date,
-    updateAt: Date,
     userId: String
   ): ProjectReponsive
   updateProject(

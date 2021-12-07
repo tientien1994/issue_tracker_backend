@@ -58,10 +58,13 @@ export default {
     updatePipeline: async (_, args, context) => {
       const { mongo , user} = context
       
-      const updatePipeline = await mongo.Pipeline.findOne({ _id: ObjectId(args.id)})
+      const updatePipeline = await mongo.Pipeline.findOne({ _id: ObjectId(args.id),deletedAt: null})
+      
       if(!!updatePipeline){
           await mongoUpdate('Pipeline', args, context)
+          
           const pipeReponsive=await mongo.Pipeline.findOne({ _id: ObjectId(args.id), deletedAt: null })
+          console.log(pipeReponsive)
           return {
             success: true,
             message: "Pipeline has been updated successfully!",
@@ -70,19 +73,41 @@ export default {
       }
       return {
         success: false,
-        message: "Pipeline is not to be."
+        message: "Pipeline is not found."
+      }
+    },
+    updateIssueId:async (_, args, context) => {
+      const { mongo , user} = context
+      
+      const updatePipeline = await mongo.Pipeline.findOne({ _id: ObjectId(args.id),deletedAt: null})
+      
+      if(!!updatePipeline){
+          await mongoUpdate('Pipeline', args, context)
+          
+          const pipeReponsive=await mongo.Pipeline.findOne({ _id: ObjectId(args.id), deletedAt: null })
+          console.log(pipeReponsive)
+          return {
+            success: true,
+            message: "Update IssueId Complete",
+            pipeline:pipeReponsive
+          }
+      }
+      return {
+        success: false,
+        message: "Pipeline is not found."
       }
     },
     
     deletePipeline:async (_, args, context)=> {
       const { mongo } = context
-      const deletePipeline = await mongo.Pipeline.findOne({ _id: ObjectId(args.id)})
+      const deletePipeline = await mongo.Pipeline.findOne({ _id: ObjectId(args.id), deletedAt: null})
         if(!!deletePipeline){
             if(deletePipeline.deletedAt===null){
                 await mongoDelete('Pipeline', args, context)
             return {
                 success: true,
-                message: "Pipeline has been deleted successfully!"     
+                message: "Pipeline has been deleted successfully!", 
+                pipeline:deletePipeline   
               }
             }  
             else{

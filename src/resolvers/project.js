@@ -31,31 +31,56 @@ export default {
   },
 
   Mutation: {
-    createProject: async (_, args, context) => {
-      const { mongo } = context
-
-      const { createProjectId } = await mongo.Project.insertOne(args)
-      const createdProject = await mongo.Project.findOne({ _id: createProjectId })
-
-      return {
-        success: true,
-        project: createdProject
-      }
-    },
-    updateProject: async (_, args, context) => {
-      const { mongo } = context
+    createProject: async (_, args, { mongo }) => {
       
-      const { updateProjectId } = await mongo.Project.updateOne({_id:ObjectId(args.id)}, {$set:{
+      args.createdAt=new Date().getTime()
+      args.updatedAt=new Date().getTime()
+      const { insertedId } = await mongo.Project.insertOne(args)
+
+      const createdProject = await mongo.Project.findOne({ _id: insertedId })
+
+      console.log(createdProject)
+      if(!!createdProject){
+        return {
+          success: true,
+          message:"Complete",
+          project: createdProject
+        }
+      }
+      return {
+        success: false,
+        message:"Create Failed",
+        project: null
+      }
+    
+      
+    },
+    updateProject: async (_, args, { mongo }) => { 
+      const { insertedId } = await mongo.Project.updateOne({_id:ObjectId(args.id)},{$set:{
           name: args.name,
           description: args.description,
           updateAt:new Date().getTime()
 
       }})
-      const updateProject = await mongo.Project.findOne({ _id: updateProjectId })
-      return {
-        success: true,
-        project: updateProject
+      
+      const updateProject = await mongo.Project.findOne({ _id: ObjectId(args.id) })
+     
+      if(!!updateProject){
+        return {
+          success: true,
+          message:"Update Complete",
+          project: updateProject
+        }
       }
+      else{
+        return {
+          success: false,
+          message:"Update faild",
+          project: null
+        }
+      }
+     
+      
     },
     deleteProject:async (_, args, context)=> {
       const { mongo } = context

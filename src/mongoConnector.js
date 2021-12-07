@@ -40,7 +40,9 @@ export default async () => {
     Logger.filter("class", ["Cursor", "Server"])
     // Logger.filter('class', ['Cursor'])
   }
-
+  console.log('----------------------------')
+  console.log('1')
+  console.log('----------------------------')
   return {
     mongo: {
       AppSetting: db.collection("appSettings"),

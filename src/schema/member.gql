@@ -3,6 +3,9 @@ type Member{
     projectId: String!
     userId: String!
     role: String!
+    updatedAt:Date
+    createdAt:Date
+    deletedAt:Date
 }
 
 enum MemberOrder{
@@ -27,10 +30,11 @@ type Mutation{
         userId:String,
         role:String
     ):MemberReponsive
-    updatedMenber(
+    updatedMember(
         id:String!,
         projectId:String,
         userId:String,
+        role:String
     ):MemberReponsive
     deleteMember(
         id:String!

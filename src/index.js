@@ -39,12 +39,13 @@ async function start() {
   const typeDefs = mergeTypeDefs(loadFilesSync(path.join(__dirname, './schema')))
   const resolvers = mergeResolvers(loadFilesSync(path.join(__dirname, './resolvers')))
   const executableSchema = makeExecutableSchema({ typeDefs, resolvers })
-
+  
   const app = express()
   app.use(express.json({ limit: '2mb' }))
   app.use(cors({ credentials: true, origin: '*' }))
 
   if (process.env.APP_ENV === 'production') {
+    
     app.use(
       '/agendash',
       basicAuth({
@@ -166,26 +167,26 @@ async function start() {
     path: subscriptionsEndpoint,
   })
 
-  httpServer.listen(PORT, () => {
+  app.listen(PORT, () => {
     console.log(`API is running on localhost:${PORT}`)
   })
 
-  process.on('uncaughtException', function (err) {
-    console.log('process.on handler')
-    console.log(err)
-  })
+  // process.on('uncaughtException', function (err) {
+  //   console.log('process.on handler')
+  //   console.log(err)
+  // })
 
-  process.on('SIGTERM', function () {
-    console.log("\nGracefully shutting down from SIGTERM")
-    subscriptionServer.close()
-    process.exit(1)
-  })
+  // process.on('SIGTERM', function () {
+  //   console.log("\nGracefully shutting down from SIGTERM")
+  //   subscriptionServer.close()
+  //   process.exit(1)
+  // })
 
-  process.on('SIGINT', function () {
-    console.log("\nGracefully shutting down from SIGINT (Ctrl-C)")
-    subscriptionServer.close()
-    process.exit(1)
-  })
+  // process.on('SIGINT', function () {
+  //   console.log("\nGracefully shutting down from SIGINT (Ctrl-C)")
+  //   subscriptionServer.close()
+  //   process.exit(1)
+  // })
 
 }
 
